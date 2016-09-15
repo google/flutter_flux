@@ -1,25 +1,19 @@
 name: flutter_flux
-version: 3.0.0
-description: Flux library for Flutter, featuring uni-directional dataflow
-  inspired by reflux and Facebook's flux architecture.
-  This is an experimental package and does not have official support for the
-  Flutter team. However, feedback is most welcome!
-  # Based on https://github.com/Workiva/w_flux.
-authors:
-  - Workiva Client Platform Team <team-clientplatform@workiva.com>
-  - Dustin Lessard <dustin.lessard@workiva.com>
-  - Evan Weible <evan.weible@workiva.com>
-  - Jay Udey <jay.udey@workiva.com>
-  - Max Peterson <maxwell.peterson@workiva.com>
-  - Trent Grover <trent.grover@workiva.com>
-  - Jim Beveridge <jimbe@google.com>
+version: 4.0.0
+description: Flux library for Flutter, featuring unidirectional dataflow inspired by reflux and Facebook's flux architecture.
 homepage: https://github.com/flutter/flutter_flux
+dependencies:
+  meta: ^1.0.3
+  #flutter:
+  #  sdk: flutter
+
 dev_dependencies:
-  # flutter must be a dev_dependency, otherwise pub gives this error message:
-  # Invalid description: "../flutter/packages/flutter" is a relative path,
-  # but this isn't a local pubspec.
+  # TODO(abarth): Remove this in favor of the SDK source above.
   flutter:
     path: ../flutter/packages/flutter
-  quiver:  "^0.22.0"
+  quiver:  ^0.22.0
   rate_limit: ^0.1.0
-  test: "^0.12.13"
+  test: ^0.12.13
+
+environment:
+  sdk: ^1.19.0

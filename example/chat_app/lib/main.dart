@@ -9,7 +9,7 @@ import 'stores.dart';
 
 void main() {
   runApp(new MaterialApp(
-      title: "Firechat",
+      title: 'Chat',
       theme: new ThemeData(
           primarySwatch: Colors.purple, accentColor: Colors.orangeAccent[400]),
       home: new ChatScreen()));
@@ -19,7 +19,7 @@ class ChatScreen extends StoreWatcher {
   ChatScreen({Key key}) : super(key: key);
 
   @override
-  void initState(ListenToStore listenToStore) {
+  void initStores(ListenToStore listenToStore) {
     listenToStore(messageStoreToken);
     listenToStore(userStoreToken);
   }
@@ -57,7 +57,7 @@ class ChatScreen extends StoreWatcher {
 
     return new Scaffold(
         appBar:
-            new AppBar(title: new Text("Chatting as ${chatUserStore.me.name}")),
+            new AppBar(title: new Text('Chatting as ${chatUserStore.me.name}')),
         body: new Column(children: <Widget>[
           new Flexible(
               child: new Block(

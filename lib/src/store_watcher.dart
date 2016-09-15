@@ -14,55 +14,64 @@
 
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_flux/src/store.dart';
 
-typedef Store ListenToStore(StoreToken token,
-    [void onChangeEvent(Store payload)]);
+/// Signature for a function the lets the caller listen to a store.
+typedef Store ListenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]);
 
-/// ```dart
-/// Widget build(BuildContext context) {
-///   FooModel foo = const StoreWatcher<FooModel>().of(context);
-///   return new Text(foo.bar);
-/// }
-/// ```
+/// A widget that rebuilds when the [Store]s it is listening to change.
 abstract class StoreWatcher extends StatefulWidget {
-  // You can use the storeTokens parameter for stores where you
-  // just want the default behavior of calling initState(). To
-  // specify your own handler, call `listenToStore` directly.
-  StoreWatcher({Key key}) : super(key: key);
+  /// Creates a widget that watches stores.
+  StoreWatcher({ Key key }) : super(key: key);
 
   /// Override this function to build widgets that depend on the current value
-  /// of the animation.
+  /// of the store.
+  @protected
   Widget build(BuildContext context, Map<StoreToken, Store> stores);
 
-  void initState(ListenToStore listenToStore);
+  /// Override this function to configure which stores to listen to.
+  ///
+  /// This function is called by [StoreWatcherState] during its
+  /// [State.initState] lifecycle callback, which means it is called once per
+  /// inflation of the widget. As a result, the set of stores you listen to
+  /// should not depend on any constructor parameters for this object because
+  /// if the parent rebuilds and supplies new constructor arguments, this
+  /// function will not be called again.
+  @protected
+  void initStores(ListenToStore listenToStore);
 
   @override
-  State createState() => new StoreWatcherState();
+  StoreWatcherState createState() => new StoreWatcherState();
 }
 
-// If you get these errors from the analyzer, then you need to add a file
-// .analysis_options like you find in the root of this repo.
-// [error] The class 'StoreWatcherMixin' cannot be used as a mixin because it
-// extends a class other than Object.
-// [error] The class 'StoreWatcherMixin' cannot be used as a mixin because it
-// references 'super'
+/// State for a [StoreWatcher] widget.
 class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin {
+  // If you get these errors from the analyzer, then you need to add a file
+  // .analysis_options like you find in the root of this repo.
+  // [error] The class 'StoreWatcherMixin' cannot be used as a mixin because it
+  // extends a class other than Object.
+  // [error] The class 'StoreWatcherMixin' cannot be used as a mixin because it
+  // references 'super'
+
   final Map<StoreToken, Store> _storeTokens = <StoreToken, Store>{};
 
   @override
-  void didUpdateConfig(StoreWatcher oldConfig) {}
-
-  @override
   void initState() {
-    config.initState(listenToStore);
+    config.initStores(listenToStore);
     super.initState();
   }
 
+  /// Start receiving notifications from the given store, optionally routed
+  /// to the given function.
+  ///
+  /// The default action is to call setState(). In general, you want to use the
+  /// default function, which rebuilds everything, and let the framework figure
+  /// out the delta of what changed.
   @override
-  Store listenToStore(StoreToken token, [void onChangeEvent(Store store)]) {
-    final Store store = super.listenToStore(token, onChangeEvent);
+  Store listenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]) {
+    final Store store = super.listenToStore(token, onStoreChanged);
     _storeTokens[token] = store;
     return store;
   }
@@ -73,74 +82,71 @@ class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin {
   }
 }
 
-/// ```dart
-/// Widget build(BuildContext context) {
-///   FooModel foo = const StoreWatcher<FooModel>().of(context);
-///   return new Text(foo.bar);
-/// }
-/// ```
-abstract class StoreWatcherMixin extends State {
-  final Map<Store, StreamSubscription<Store>> _streamSubscriptions =
-      <Store, StreamSubscription<Store>>{};
-
-  @override
-  void setState(VoidCallback fn);
+/// Listens to changes in a number of different stores.
+///
+/// Used by [StoreWatcher] to track which stores the widget is listening to.
+abstract class StoreWatcherMixin implements State<dynamic> { // ignore: TYPE_ARGUMENT_NOT_MATCHING_BOUNDS, https://github.com/dart-lang/sdk/issues/25232
+  final Map<Store, StreamSubscription<Store>> _streamSubscriptions = <Store, StreamSubscription<Store>>{};
 
   /// Start receiving notifications from the given store, optionally routed
-  /// to the given function. The default action is to call setState().
-  /// In general, you want to use the default function, rebuild everything, and
-  /// let Flutter figure out the delta of what changed.
-  Store listenToStore(StoreToken token, [void onChangeEvent(Store store)]) {
+  /// to the given function.
+  ///
+  /// By default, [onStoreChanged] will be called when the store changes.
+  @protected
+  Store listenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]) {
     final Store store = token._value;
-    _streamSubscriptions[store] =
-        store.listen(onChangeEvent ?? _handleChangeEvent);
+    _streamSubscriptions[store] = store.listen(onStoreChanged ?? _handleStoreChanged);
     return store;
   }
 
+  /// Stop receiving notifications from the given store.
+  @protected
   void unlistenFromStore(Store store) {
     _streamSubscriptions[store]?.cancel();
     _streamSubscriptions.remove(store);
   }
 
+  /// Cancel all store subscriptions.
   @override
-  Widget build(BuildContext context);
-
-  void dipose() {
+  void dispose() {
     final Iterable<StreamSubscription<Store>> subscriptions =
         _streamSubscriptions.values;
     _streamSubscriptions.clear();
-    for (final StreamSubscription<Store> sub in subscriptions) {
-      sub.cancel();
-    }
+    for (final StreamSubscription<Store> subscription in subscriptions)
+      subscription.cancel();
     super.dispose();
   }
 
-  /// Default behavior when receiving an event from a store is to rebuild.
-  /// To override this function, use the second parameter in [listenToStore].
-  void _handleChangeEvent(Store store) {
-    if (mounted) {
-      setState(() {});
-    }
+  void _handleStoreChanged(Store store) {
+    // TODO(abarth): We cancel our subscriptions in [dispose], which means we
+    // shouldn't receive this callback when we're not mounted. If that's the
+    // case, we should change this check into an assert that we are mounted.
+    if (!mounted)
+      return;
+    setState(() { });
   }
 }
 
-/// Represent a store so it can be returned by `StoreWatcherMixin.listenToStore`.
+/// Represent a store so it can be returned by [StoreListener.listenToStore].
 ///
 /// Used to make sure that callers never reference the store without calling
 /// listen() first. In the example below, _itemStore would not be globally
 /// available:
+///
 /// ```dart
 /// final _itemStore = new AppStore(actions);
 /// final itemStoreToken = new StoreToken(_itemStore);
 /// ```
 class StoreToken {
+  /// Creates a store token for the given store.
   StoreToken(this._value);
 
   final Store _value;
 
   @override
   bool operator ==(dynamic other) {
-    if (other is! StoreToken) return false;
+    if (other is! StoreToken)
+      return false;
     final StoreToken typedOther = other;
     return identical(_value, typedOther._value);
   }
