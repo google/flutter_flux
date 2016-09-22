@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// The w_flux library implements a uni-directional data flow pattern comprised
-/// of [Action]s, [Store]s, and [FluxComponent]s.
+/// The flutter_flux library implements a unidirectional data flow pattern
+/// comprised of [Action]s, [Store]s, and [StoreWatcher]s.
 ///
 /// - [Action]s initiate mutation of app data that resides in [Store]s.
-/// - Data mutations within [Store]s trigger re-rendering of app view (defined
-///   in [FluxComponent]s).
-/// - [FluxComponent]s dispatch [Action]s in response to user interaction.
+/// - Data mutations within [Store]s trigger re-rendering of a widget (defined
+///   in [StoreWatcher]s).
+/// - [StoreWatcher]s dispatch [Action]s in response to user interaction.
 
 export 'src/action.dart';
 export 'src/store.dart';
