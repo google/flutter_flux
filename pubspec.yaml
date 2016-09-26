@@ -4,13 +4,10 @@ description: Flux library for Flutter, featuring unidirectional dataflow inspire
 homepage: https://github.com/flutter/flutter_flux
 dependencies:
   meta: ^1.0.3
-  #flutter:
-  #  sdk: flutter
+  flutter:
+   sdk: flutter
 
 dev_dependencies:
-  # TODO(abarth): Remove this in favor of the SDK source above.
-  flutter:
-    path: ../flutter/packages/flutter
   quiver:  ^0.22.0
   rate_limit: ^0.1.0
   test: ^0.12.13
