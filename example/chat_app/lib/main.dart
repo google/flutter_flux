@@ -82,16 +82,26 @@ class ChatMessageListItem extends StatefulWidget {
   State createState() => new ChatMessageListItemState();
 }
 
-class ChatMessageListItemState extends State<ChatMessageListItem> {
-  ChatMessageListItemState() {
+class ChatMessageListItemState extends State<ChatMessageListItem>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = new AnimationController(
+        vsync: this, duration: new Duration(milliseconds: 700));
     _animation = new CurvedAnimation(
         parent: _animationController, curve: Curves.easeOut);
     _animationController.forward();
   }
 
-  AnimationController _animationController =
-      new AnimationController(duration: new Duration(milliseconds: 700));
-  Animation<double> _animation;
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,11 +116,5 @@ class ChatMessageListItemState extends State<ChatMessageListItem> {
                 backgroundColor: message.sender.color),
             title: new Text(message.sender.name),
             subtitle: new Text(message.text)));
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 }
