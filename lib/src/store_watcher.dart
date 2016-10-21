@@ -111,9 +111,9 @@ abstract class StoreWatcherMixin implements State<dynamic> { // ignore: TYPE_ARG
   void dispose() {
     final Iterable<StreamSubscription<Store>> subscriptions =
         _streamSubscriptions.values;
-    _streamSubscriptions.clear();
     for (final StreamSubscription<Store> subscription in subscriptions)
       subscription.cancel();
+    _streamSubscriptions.clear();
     super.dispose();
   }
 
