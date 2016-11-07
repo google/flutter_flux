@@ -1,0 +1,8 @@
+# Important: Use "flutter packages get", not "pub get".
+name: chat_app
+description: A one-sided chat app using Flutter.
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_flux:
+    path: ../..
