@@ -1,5 +1,6 @@
 # Important: Use "flutter packages get", not "pub get".
 name: flutter_flux
+author: Flutter Authors <flutter-dev@googlegroups.com>
 version: 4.0.0
 description: Flux library for Flutter, featuring unidirectional dataflow inspired by reflux and Facebook's flux architecture.
 homepage: https://github.com/flutter/flutter_flux
@@ -16,4 +17,4 @@ dev_dependencies:
     sdk: flutter
 
 environment:
-  sdk: ^1.19.0
+  sdk: ">=1.19.0 <2.0.0"
