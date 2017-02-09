@@ -7,5 +7,4 @@ for setting up a flutter environment and connecting your Android or iOS device.
 Then do this:
 
 1. `cd chat_app`
-2. `pub get`
-3. `flutter run`
+2. `flutter run`
