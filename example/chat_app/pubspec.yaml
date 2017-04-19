@@ -6,3 +6,6 @@ dependencies:
     sdk: flutter
   flutter_flux:
     path: ../..
+
+flutter:
+  uses-material-design: true
