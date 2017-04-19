@@ -59,7 +59,7 @@ class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin {
 
   @override
   void initState() {
-    config.initStores(listenToStore);
+    widget.initStores(listenToStore);
     super.initState();
   }
 
@@ -78,7 +78,7 @@ class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin {
 
   @override
   Widget build(BuildContext context) {
-    return config.build(context, _storeTokens);
+    return widget.build(context, _storeTokens);
   }
 }
 
