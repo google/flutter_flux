@@ -105,7 +105,7 @@ class ChatMessageListItemState extends State<ChatMessageListItem>
 
   @override
   Widget build(BuildContext context) {
-    final ChatMessage message = config.message;
+    final ChatMessage message = widget.message;
     return new SizeTransition(
         sizeFactor: _animation,
         axisAlignment: 0.0,
