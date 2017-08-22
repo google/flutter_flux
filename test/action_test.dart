@@ -132,7 +132,7 @@ void main() {
 
       test('should surface errors in listeners', () {
         Action<int> action = new Action<int>();
-        action.listen((Null _) => throw new UnimplementedError());
+        action.listen((int _) => throw new UnimplementedError());
         expect(action(0), throwsUnimplementedError);
       });
     });
