@@ -14,17 +14,18 @@
 
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_flux/src/store.dart';
+import 'package:meta/meta.dart';
 
 /// Signature for a function the lets the caller listen to a store.
-typedef Store ListenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]);
+typedef Store ListenToStore(StoreToken token,
+    [ValueChanged<Store> onStoreChanged]);
 
 /// A widget that rebuilds when the [Store]s it is listening to change.
 abstract class StoreWatcher extends StatefulWidget {
   /// Creates a widget that watches stores.
-  StoreWatcher({ Key key }) : super(key: key);
+  StoreWatcher({Key key}) : super(key: key);
 
   /// Override this function to build widgets that depend on the current value
   /// of the store.
@@ -47,9 +48,10 @@ abstract class StoreWatcher extends StatefulWidget {
 }
 
 /// State for a [StoreWatcher] widget.
-class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin {
+class StoreWatcherState extends State<StoreWatcher>
+    with StoreWatcherMixin<StoreWatcher> {
   // If you get these errors from the analyzer, then you need to add a file
-  // .analysis_options like you find in the root of this repo.
+  // analysis_options.yaml like you find in the root of this repo.
   // [error] The class 'StoreWatcherMixin' cannot be used as a mixin because it
   // extends a class other than Object.
   // [error] The class 'StoreWatcherMixin' cannot be used as a mixin because it
@@ -85,8 +87,10 @@ class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin {
 /// Listens to changes in a number of different stores.
 ///
 /// Used by [StoreWatcher] to track which stores the widget is listening to.
-abstract class StoreWatcherMixin implements State<dynamic> { // ignore: TYPE_ARGUMENT_NOT_MATCHING_BOUNDS, https://github.com/dart-lang/sdk/issues/25232
-  final Map<Store, StreamSubscription<Store>> _streamSubscriptions = <Store, StreamSubscription<Store>>{};
+abstract class StoreWatcherMixin<T extends StatefulWidget> implements State<T> {
+  // ignore: TYPE_ARGUMENT_NOT_MATCHING_BOUNDS, https://github.com/dart-lang/sdk/issues/25232
+  final Map<Store, StreamSubscription<Store>> _streamSubscriptions =
+      <Store, StreamSubscription<Store>>{};
 
   /// Start receiving notifications from the given store, optionally routed
   /// to the given function.
@@ -95,7 +99,8 @@ abstract class StoreWatcherMixin implements State<dynamic> { // ignore: TYPE_ARG
   @protected
   Store listenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]) {
     final Store store = token._value;
-    _streamSubscriptions[store] = store.listen(onStoreChanged ?? _handleStoreChanged);
+    _streamSubscriptions[store] =
+        store.listen(onStoreChanged ?? _handleStoreChanged);
     return store;
   }
 
@@ -121,9 +126,8 @@ abstract class StoreWatcherMixin implements State<dynamic> { // ignore: TYPE_ARG
     // TODO(abarth): We cancel our subscriptions in [dispose], which means we
     // shouldn't receive this callback when we're not mounted. If that's the
     // case, we should change this check into an assert that we are mounted.
-    if (!mounted)
-      return;
-    setState(() { });
+    if (!mounted) return;
+    setState(() {});
   }
 }
 
@@ -145,8 +149,7 @@ class StoreToken {
 
   @override
   bool operator ==(dynamic other) {
-    if (other is! StoreToken)
-      return false;
+    if (other is! StoreToken) return false;
     final StoreToken typedOther = other;
     return identical(_value, typedOther._value);
   }
