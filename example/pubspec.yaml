@@ -9,7 +9,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_flux:
-    path: /Users/rxlabz/dev/examples/flutter/examples/redux_styles/flutter_flux-1
+    path: ../
 
 
 # For information on the generic Dart part of this file, see the
