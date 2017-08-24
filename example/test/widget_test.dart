@@ -5,10 +5,10 @@
 // are correct.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_flux_example/stores.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../lib/main.dart';
+import '../lib/stores.dart';
 
 const kMessage = 'A message';
 const kName = 'Bob';
@@ -41,8 +41,7 @@ void main() {
     expect(find.byType(ChatMessageListItem), findsNWidgets(2));
   });
 
-  testWidgets('fill a ChatMessageItem',
-      (WidgetTester tester) async {
+  testWidgets('fill a ChatMessageItem', (WidgetTester tester) async {
     Widget widget = new Material(
         child: new ChatMessageListItem(new ChatMessage(
             text: kMessage,

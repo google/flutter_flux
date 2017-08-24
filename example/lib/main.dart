@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_flux/flutter_flux.dart';
-import 'package:flutter_flux_example/stores.dart';
+import 'stores.dart';
 
 void main() {
   runApp(new MaterialApp(
