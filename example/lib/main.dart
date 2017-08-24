@@ -15,9 +15,9 @@ void main() {
 }
 
 class ChatScreen extends StoreWatcher {
-  final TextEditingController msgController = new TextEditingController();
-
   ChatScreen({Key key}) : super(key: key);
+
+  final TextEditingController msgController = new TextEditingController();
 
   @override
   void initStores(ListenToStore listenToStore) {
@@ -64,7 +64,6 @@ class ChatScreen extends StoreWatcher {
           new Flexible(
               child: new ListView(
                   padding: new EdgeInsets.symmetric(horizontal: 8.0),
-                  /*scrollAnchor: ViewportAnchor.end,*/
                   children: messageStore.messages
                       .map((ChatMessage m) => new ChatMessageListItem(m))
                       .toList())),
