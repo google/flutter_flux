@@ -149,7 +149,7 @@ class StoreToken {
 
   @override
   bool operator ==(dynamic other) {
-    if (other is! StoreToken) return false;
+    if (other.runtimeType != runtimeType) return false;
     final StoreToken typedOther = other;
     return identical(_value, typedOther._value);
   }
