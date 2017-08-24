@@ -1,7 +1,7 @@
-# flutter_flux_example
+# flutter_flux example
 
-Mock Chat app example
+Simple mock chat app example
 
 ```bash
-
+flutter run
 ```
