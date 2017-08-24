@@ -15,8 +15,8 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_flux/src/store.dart';
-import 'package:meta/meta.dart';
 
 /// Signature for a function the lets the caller listen to a store.
 typedef Store ListenToStore(StoreToken token,
