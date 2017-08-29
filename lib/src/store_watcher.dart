@@ -14,9 +14,9 @@
 
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_flux/src/store.dart';
+import 'package:flutter/foundation.dart';
+import 'store.dart';
 
 /// Signature for a function the lets the caller listen to a store.
 typedef Store ListenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]);
@@ -47,13 +47,7 @@ abstract class StoreWatcher extends StatefulWidget {
 }
 
 /// State for a [StoreWatcher] widget.
-class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin {
-  // If you get these errors from the analyzer, then you need to add a file
-  // .analysis_options like you find in the root of this repo.
-  // [error] The class 'StoreWatcherMixin' cannot be used as a mixin because it
-  // extends a class other than Object.
-  // [error] The class 'StoreWatcherMixin' cannot be used as a mixin because it
-  // references 'super'
+class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin<StoreWatcher> {
 
   final Map<StoreToken, Store> _storeTokens = <StoreToken, Store>{};
 
@@ -85,7 +79,7 @@ class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin {
 /// Listens to changes in a number of different stores.
 ///
 /// Used by [StoreWatcher] to track which stores the widget is listening to.
-abstract class StoreWatcherMixin implements State<dynamic> { // ignore: TYPE_ARGUMENT_NOT_MATCHING_BOUNDS, https://github.com/dart-lang/sdk/issues/25232
+abstract class StoreWatcherMixin<T extends StatefulWidget> implements State<T>{
   final Map<Store, StreamSubscription<Store>> _streamSubscriptions = <Store, StreamSubscription<Store>>{};
 
   /// Start receiving notifications from the given store, optionally routed
@@ -110,7 +104,7 @@ abstract class StoreWatcherMixin implements State<dynamic> { // ignore: TYPE_ARG
   @override
   void dispose() {
     final Iterable<StreamSubscription<Store>> subscriptions =
-        _streamSubscriptions.values;
+      _streamSubscriptions.values;
     for (final StreamSubscription<Store> subscription in subscriptions)
       subscription.cancel();
     _streamSubscriptions.clear();
@@ -145,7 +139,7 @@ class StoreToken {
 
   @override
   bool operator ==(dynamic other) {
-    if (other is! StoreToken)
+    if (other.runtimeType != runtimeType)
       return false;
     final StoreToken typedOther = other;
     return identical(_value, typedOther._value);

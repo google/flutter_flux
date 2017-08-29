@@ -53,7 +53,7 @@ class Store {
 
     // apply a transform to the stream if supplied
     _stream =
-        _streamController.stream.transform(transformer).asBroadcastStream();
+        _streamController.stream.transform<dynamic>(transformer).asBroadcastStream();
   }
 
   /// Stream controller for [_stream]. Used by [trigger].

@@ -37,7 +37,7 @@ void main() {
     });
 
     test('should trigger with itself as the payload', () async {
-      store.listen(expectAsync((Store listenedStore) {
+      store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
       }));
 
@@ -74,7 +74,7 @@ void main() {
 
     test('should trigger in response to an action', () {
       store.triggerOnAction(action);
-      store.listen(expectAsync((Store listenedStore) {
+      store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
       }));
       action();
@@ -88,7 +88,7 @@ void main() {
         wasTriggered = true;
       }
       store.triggerOnAction(action, onAction);
-      store.listen(expectAsync((Store listenedStore) {
+      store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
         expect(wasTriggered, isTrue);
       }));
@@ -104,7 +104,7 @@ void main() {
         return true;
       }
       store.triggerOnConditionalAction(action, onAction);
-      store.listen(expectAsync((Store listenedStore) {
+      store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
         expect(wasTriggered, isTrue);
       }));
@@ -134,7 +134,7 @@ void main() {
         afterTimer = true;
       }
       store.triggerOnAction(action, asyncCallback);
-      store.listen(expectAsync((Store listenedStore) {
+      store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
         expect(afterTimer, isTrue);
       }));
@@ -147,7 +147,7 @@ void main() {
       final Action<int> _action = new Action<int>();
       int counter = 0;
       store.triggerOnAction(_action, (int payload) => counter = payload);
-      store.listen(expectAsync((Store listenedStore) {
+      store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
         expect(counter, equals(17));
       }));

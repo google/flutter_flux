@@ -1,10 +1,7 @@
-flutter_flux Example
-====================
+# flutter_flux example
 
-To run the example, follow the instructions at [flutter.io](https://flutter.io)
-for setting up a flutter environment and connecting your Android or iOS device.
+Simple mock chat app example
 
-Then do this:
-
-1. `cd chat_app`
-2. `flutter run`
+```bash
+flutter run
+```

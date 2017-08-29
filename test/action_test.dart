@@ -74,7 +74,7 @@ void main() {
           'event queue', () async {
         final Action<Null> action = new Action<Null>();
         bool listenerCompleted = false;
-        action.listen((_) {
+        action.listen((Null _) {
           listenerCompleted = true;
         });
 
@@ -93,7 +93,7 @@ void main() {
         final Action<Null> action = new Action<Null>();
         bool listenerInvoked = false;
         bool listenerCompleted = false;
-        action.listen((_) async {
+        action.listen((Null _) async {
           listenerInvoked = true;
           await new Future<Null>(() {
             listenerCompleted = true;
@@ -117,7 +117,7 @@ void main() {
       test('should complete future after listeners complete', () async {
         final Action<Null> action = new Action<Null>();
         bool asyncListenerCompleted = false;
-        action.listen((_) async {
+        action.listen((Null _) async {
           await new Future<Null>.delayed(new Duration(milliseconds: 100), () {
             asyncListenerCompleted = true;
           });
@@ -132,7 +132,7 @@ void main() {
 
       test('should surface errors in listeners', () {
         Action<int> action = new Action<int>();
-        action.listen((_) => throw new UnimplementedError());
+        action.listen((int _) => throw new UnimplementedError());
         expect(action(0), throwsUnimplementedError);
       });
     });
@@ -141,7 +141,7 @@ void main() {
       test('should stop listening when subscription is canceled', () async {
         Action<Null> action = new Action<Null>();
         bool listened = false;
-        ActionSubscription subscription = action.listen((_) => listened = true);
+        ActionSubscription subscription = action.listen((Null _) => listened = true);
 
         await action();
         expect(listened, isTrue);
@@ -155,7 +155,7 @@ void main() {
       test('should stop listening when listeners are cleared', () async {
         final Action<Null> action = new Action<Null>();
         bool listened = false;
-        action.listen((_) => listened = true);
+        action.listen((Null _) => listened = true);
 
         await action();
         expect(listened, isTrue);
@@ -173,8 +173,8 @@ void main() {
         final Stopwatch stopwatch = new Stopwatch();
 
         final Action<Null> awaitableAction = new Action<Null>();
-        awaitableAction.listen((_) {});
-        awaitableAction.listen((_) async {});
+        awaitableAction.listen((Null _) {});
+        awaitableAction.listen((Null _) async {});
         stopwatch.start();
         for (int i = 0; i < sampleSize; i++) {
           await awaitableAction();
@@ -188,8 +188,8 @@ void main() {
         Completer<Null> syncCompleter;
         Completer<Null> asyncCompleter;
         Action<Null> action = new Action<Null>();
-        action.listen((_) => syncCompleter.complete());
-        action.listen((_) async {
+        action.listen((Null _) => syncCompleter.complete());
+        action.listen((Null _) async {
           asyncCompleter.complete();
         });
         stopwatch.start();
