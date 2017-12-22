@@ -14,15 +14,53 @@ void main() {
       home: new ChatScreen()));
 }
 
-class ChatScreen extends StoreWatcher {
+class ChatScreen extends StatefulWidget {
+  /// Creates a widget that watches stores.
   ChatScreen({Key key}) : super(key: key);
+
+  @override
+  ChatScreenState createState() => new ChatScreenState();
+}
+
+// To use StoreWatcherMixin in your widget's State class:
+// 1. Add "with StoreWatcherMixin<yyy>" to the class declaration where yyy is
+//    the type of your StatefulWidget.
+// 2. Add the Store declarations to your class.
+// 3. Add initState() function that calls listenToStore() for each store to
+//    be monitored.
+// 4. Use the information from your store(s) in your build() function.
+
+class ChatScreenState extends State<ChatScreen>
+    with StoreWatcherMixin<ChatScreen> {
+  // Never write to these stores directly. Use Actions.
+  ChatMessageStore messageStore;
+  ChatUserStore chatUserStore;
 
   final TextEditingController msgController = new TextEditingController();
 
+  /// Override this function to configure which stores to listen to.
+  ///
+  /// This function is called by [StoreWatcherState] during its
+  /// [State.initState] lifecycle callback, which means it is called once per
+  /// inflation of the widget. As a result, the set of stores you listen to
+  /// should not depend on any constructor parameters for this object because
+  /// if the parent rebuilds and supplies new constructor arguments, this
+  /// function will not be called again.
   @override
-  void initStores(ListenToStore listenToStore) {
-    listenToStore(messageStoreToken);
-    listenToStore(userStoreToken);
+  void initState() {
+    super.initState();
+
+    // Demonstrates using a custom change handler.
+    messageStore =
+        listenToStore(messageStoreToken, handleChatMessageStoreChanged);
+
+    // Demonstrates using the default handler, which just calls setState().
+    chatUserStore = listenToStore(userStoreToken);
+  }
+
+  void handleChatMessageStoreChanged(ChatMessageStore messageStore) {
+    msgController.text = messageStore.currentMessage;
+    setState(() {});
   }
 
   Widget _buildTextComposer(BuildContext context, ChatMessageStore messageStore,
@@ -52,11 +90,7 @@ class ChatScreen extends StoreWatcher {
     ]);
   }
 
-  @override
-  Widget build(BuildContext context, Map<StoreToken, Store> stores) {
-    final ChatMessageStore messageStore = stores[messageStoreToken];
-    final ChatUserStore chatUserStore = stores[userStoreToken];
-
+  Widget build(BuildContext context) {
     return new Scaffold(
         appBar:
             new AppBar(title: new Text('Chatting as ${chatUserStore.me.name}')),
