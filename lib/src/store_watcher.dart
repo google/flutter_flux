@@ -79,7 +79,7 @@ class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin<Store
 /// Listens to changes in a number of different stores.
 ///
 /// Used by [StoreWatcher] to track which stores the widget is listening to.
-abstract class StoreWatcherMixin<T extends StatefulWidget> implements State<T>{
+abstract class StoreWatcherMixin<T extends StatefulWidget> extends State<T>{
   final Map<Store, StreamSubscription<Store>> _streamSubscriptions = <Store, StreamSubscription<Store>>{};
 
   /// Start receiving notifications from the given store, optionally routed

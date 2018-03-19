@@ -58,8 +58,11 @@ class ChatScreenState extends State<ChatScreen>
     chatUserStore = listenToStore(userStoreToken);
   }
 
-  void handleChatMessageStoreChanged(ChatMessageStore messageStore) {
-    msgController.text = messageStore.currentMessage;
+  void handleChatMessageStoreChanged(Store store) {
+    ChatMessageStore messageStore = store;
+    if (messageStore.currentMessage.isEmpty) {
+        msgController.clear();
+    }
     setState(() {});
   }
 

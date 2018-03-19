@@ -14,7 +14,7 @@
 
 import 'dart:async';
 
-typedef void OnData(dynamic event);
+typedef void OnData<T>(T event);
 
 /// A command that can be dispatched and listened to.
 ///
@@ -42,7 +42,7 @@ typedef void OnData(dynamic event);
 /// action.
 ///
 class Action<T> implements Function {
-  List<OnData> _listeners = <OnData>[];
+  List<OnData<T>> _listeners = <OnData<T>>[];
 
   /// Dispatch this [Action] to all listeners. If a payload is supplied, it will
   /// be passed to each listener's callback, otherwise null will be passed.
@@ -60,7 +60,7 @@ class Action<T> implements Function {
     // for stream-based actions vs. 0.14 ms for this action implementation.
     return Future.wait<dynamic>(
       _listeners.map(
-        (OnData l) => new Future<dynamic>.microtask(() => l(payload))
+        (OnData<T> l) => new Future<dynamic>.microtask(() => l(payload))
       ),
     );
   }
@@ -74,7 +74,7 @@ class Action<T> implements Function {
   /// dispatched. A payload of type [T] will be passed to the callback if
   /// supplied at dispatch time, otherwise null will be passed. Returns an
   /// [ActionSubscription] which provides means to cancel the subscription.
-  ActionSubscription listen(OnData onData) {
+  ActionSubscription listen(OnData<T> onData) {
     _listeners.add(onData);
     return new ActionSubscription(() => _listeners.remove(onData));
   }
