@@ -1,0 +1,6 @@
+# This file is required to fix the "flutter analyze" error that says:
+# mixin_inherits_from_not_object
+analyzer:
+  language:
+    enableSuperMixins: true
+    enableAssertInitializer: true

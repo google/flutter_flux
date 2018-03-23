@@ -77,16 +77,12 @@ class Store {
   }
 
   /// A convenience method for listening to an [action] and triggering
-  /// automatically once the callback for said action has completed.
-  ///
-  /// If [onAction] is provided, it will be called every time [action] is
-  /// dispatched. If [onAction] returns a [Future], [trigger] will not be
-  /// called until that future has resolved and the function returns either
-  /// void (null) or true.
-  void triggerOnAction(Action<dynamic> action,
-      [dynamic onAction(dynamic payload)]) {
+  /// automatically. The callback doesn't call return, so the return
+  /// type of onAction is null.
+  void triggerOnAction<T>(Action<T> action,
+      [dynamic onAction(T payload)]) {
     if (onAction != null) {
-      action.listen((dynamic payload) async {
+      action.listen((T payload) async {
         await onAction(payload);
         trigger();
       });
@@ -104,8 +100,8 @@ class Store {
   /// If [onAction] returns a [Future], [trigger] will not be
   /// called until that future has resolved and the function returns either
   /// void (null) or true.
-  void triggerOnConditionalAction(
-      Action<dynamic> action, bool onAction(dynamic payload)) {
+  void triggerOnConditionalAction<T>(
+      Action<T> action, bool onAction(T payload)) {
     assert(action != null);
     action.listen((dynamic payload) async {
       // Action functions must return bool, or a Future<bool>.
@@ -116,7 +112,7 @@ class Store {
       } else {
         wasChanged = result;
       }
-      if (wasChanged == true) {
+      if (wasChanged) {
         trigger();
       }
     });

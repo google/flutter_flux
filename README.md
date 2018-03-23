@@ -102,23 +102,6 @@ class RandomColorStore extends Store {
     trigger();
   }
 }
-```
-
-**BONUS:** `Stores` can be initialized with a stream transformer to modify the standard behavior of the `trigger` stream.
-This can be useful for throttling UI rendering in response to high frequency `Store` mutations.
-
-```dart
-import 'package:rate_limit/rate_limit.dart';
-import 'package:flutter_flux/flutter_flux.dart';
-
-class ThrottledStore extends Store {
-  ...
-
-  ThrottledStore(this._actions) : super.withTransformer(new Throttler(const Duration(milliseconds: 30))) {
-    ...
-  }
-}
-```
 
 **BONUS:** `Stores` provide an optional terse syntax for action -> data mutation -> trigger operations.
 

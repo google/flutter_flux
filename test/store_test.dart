@@ -18,7 +18,6 @@ import 'dart:async';
 import 'package:flutter_flux/src/action.dart';
 import 'package:flutter_flux/src/store.dart';
 import 'package:quiver/testing/async.dart';
-import 'package:rate_limit/rate_limit.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -42,34 +41,6 @@ void main() {
       }));
 
       store.trigger();
-    });
-
-    test('should support stream transforms', () {
-      new FakeAsync().run((FakeAsync async) {
-        // ensure that multiple trigger executions emit
-        // exactly 2 throttled triggers to external listeners
-        // (1 for the initial trigger and 1 as the aggregate of
-        // all others that occurred within the throttled duration)
-        int count = 0;
-        store = new Store.withTransformer(
-            new Throttler<Store>(const Duration(milliseconds: 30)));
-        store.listen((Store listenedStore) {
-          count++;
-        });
-
-        store.trigger();
-        store.trigger();
-        store.trigger();
-        store.trigger();
-        store.trigger();
-        async.elapse(new Duration(milliseconds: 20));
-        expect(count, equals(1));
-        async.elapse(new Duration(milliseconds: 30));
-        expect(count, equals(2));
-        // Make sure that there aren't any queued up.
-        async.elapse(new Duration(milliseconds: 500));
-        expect(count, equals(2));
-      });
     });
 
     test('should trigger in response to an action', () {
