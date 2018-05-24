@@ -4,6 +4,7 @@
 
 # dart
 .packages
+.dart_tool/
 .pub
 packages
 pubspec.lock
