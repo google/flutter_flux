@@ -1,3 +1,7 @@
+## 4.1.2
+
+* Fixed dependencies versions
+
 ## 4.1.1
 
 * Updated iOS and Android build resources for Flutter beta.
