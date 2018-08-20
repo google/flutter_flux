@@ -102,6 +102,7 @@ class RandomColorStore extends Store {
     trigger();
   }
 }
+```
 
 **BONUS:** `Stores` provide an optional terse syntax for action -> data mutation -> trigger operations.
 
