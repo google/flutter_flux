@@ -17,6 +17,6 @@ dart --version
 
 echo "Analyzing the extracted Dart libraries."
 
-../flutter/bin/flutter analyze lib/*.dart test/*.dart
+../flutter/bin/flutter analyze lib test
 
 ../flutter/bin/flutter test
