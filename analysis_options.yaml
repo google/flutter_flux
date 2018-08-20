@@ -3,4 +3,3 @@
 analyzer:
   language:
     enableSuperMixins: true
-    enableAssertInitializer: true
