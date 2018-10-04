@@ -101,7 +101,7 @@ class Store {
   /// called until that future has resolved and the function returns either
   /// void (null) or true.
   void triggerOnConditionalAction<T>(
-      Action<T> action, bool onAction(T payload)) {
+      Action<T> action, FutureOr<bool> onAction(T payload)) {
     assert(action != null);
     action.listen((dynamic payload) async {
       // Action functions must return bool, or a Future<bool>.
