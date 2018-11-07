@@ -1,3 +1,7 @@
+## 4.1.3
+
+* Add support for new mixin syntax
+
 ## 4.1.2
 
 * Fixed dependencies versions
