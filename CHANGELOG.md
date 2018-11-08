@@ -1,6 +1,9 @@
 ## 4.1.3
 
-* Add support for new mixin syntax
+Fixed in the library:
+* Add support for new mixin syntax from Dart 2
+* Modified triggerOnConditionalAction() so that `onAction()` more accurately
+  describes its behavior by returning `FutureOr<bool>` instead of `bool`.
 
 ## 4.1.2
 
