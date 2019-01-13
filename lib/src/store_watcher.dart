@@ -17,6 +17,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'store.dart';
+import 'action_watcher.dart';
 
 /// Signature for a function the lets the caller listen to a store.
 typedef Store ListenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]);
@@ -47,7 +48,8 @@ abstract class StoreWatcher extends StatefulWidget {
 }
 
 /// State for a [StoreWatcher] widget.
-class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin<StoreWatcher> {
+class StoreWatcherState extends State<StoreWatcher> 
+  with StoreWatcherMixin<StoreWatcher>, ActionWatcherMixin<StoreWatcher>{
 
   final Map<StoreToken, Store> _storeTokens = <StoreToken, Store>{};
 
