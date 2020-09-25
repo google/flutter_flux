@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:async';
-
 typedef void OnData<T>(T event);
 
 /// A command that can be dispatched and listened to.
@@ -60,8 +58,7 @@ class Action<T> implements Function {
     // for stream-based actions vs. 0.14 ms for this action implementation.
     return Future.wait<dynamic>(
       _listeners.map(
-        (OnData<T> l) => new Future<dynamic>.microtask(() => l(payload))
-      ),
+          (OnData<T> l) => new Future<dynamic>.microtask(() => l(payload))),
     );
   }
 
