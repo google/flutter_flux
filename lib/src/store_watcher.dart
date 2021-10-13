@@ -19,12 +19,13 @@ import 'package:flutter/foundation.dart';
 import 'store.dart';
 
 /// Signature for a function the lets the caller listen to a store.
-typedef Store ListenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]);
+typedef Store ListenToStore(StoreToken token,
+    [ValueChanged<Store> onStoreChanged]);
 
 /// A widget that rebuilds when the [Store]s it is listening to change.
 abstract class StoreWatcher extends StatefulWidget {
   /// Creates a widget that watches stores.
-  StoreWatcher({ Key key }) : super(key: key);
+  StoreWatcher({Key? key}) : super(key: key);
 
   /// Override this function to build widgets that depend on the current value
   /// of the store.
@@ -47,8 +48,8 @@ abstract class StoreWatcher extends StatefulWidget {
 }
 
 /// State for a [StoreWatcher] widget.
-class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin<StoreWatcher> {
-
+class StoreWatcherState extends State<StoreWatcher>
+    with StoreWatcherMixin<StoreWatcher> {
   final Map<StoreToken, Store> _storeTokens = <StoreToken, Store>{};
 
   @override
@@ -64,7 +65,7 @@ class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin<Store
   /// default function, which rebuilds everything, and let the framework figure
   /// out the delta of what changed.
   @override
-  Store listenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]) {
+  Store listenToStore(StoreToken token, [ValueChanged<Store>? onStoreChanged]) {
     final Store store = super.listenToStore(token, onStoreChanged);
     _storeTokens[token] = store;
     return store;
@@ -79,17 +80,19 @@ class StoreWatcherState extends State<StoreWatcher> with StoreWatcherMixin<Store
 /// Listens to changes in a number of different stores.
 ///
 /// Used by [StoreWatcher] to track which stores the widget is listening to.
-mixin StoreWatcherMixin<T extends StatefulWidget> on State<T>{
-  final Map<Store, StreamSubscription<Store>> _streamSubscriptions = <Store, StreamSubscription<Store>>{};
+mixin StoreWatcherMixin<T extends StatefulWidget> on State<T> {
+  final Map<Store, StreamSubscription<Store>> _streamSubscriptions =
+      <Store, StreamSubscription<Store>>{};
 
   /// Start receiving notifications from the given store, optionally routed
   /// to the given function.
   ///
   /// By default, [onStoreChanged] will be called when the store changes.
   @protected
-  Store listenToStore(StoreToken token, [ValueChanged<Store> onStoreChanged]) {
+  Store listenToStore(StoreToken token, [ValueChanged<Store>? onStoreChanged]) {
     final Store store = token._value;
-    _streamSubscriptions[store] = store.listen(onStoreChanged ?? _handleStoreChanged);
+    _streamSubscriptions[store] =
+        store.listen(onStoreChanged ?? _handleStoreChanged);
     return store;
   }
 
@@ -104,7 +107,7 @@ mixin StoreWatcherMixin<T extends StatefulWidget> on State<T>{
   @override
   void dispose() {
     final Iterable<StreamSubscription<Store>> subscriptions =
-      _streamSubscriptions.values;
+        _streamSubscriptions.values;
     for (final StreamSubscription<Store> subscription in subscriptions)
       subscription.cancel();
     _streamSubscriptions.clear();
@@ -115,9 +118,8 @@ mixin StoreWatcherMixin<T extends StatefulWidget> on State<T>{
     // TODO(abarth): We cancel our subscriptions in [dispose], which means we
     // shouldn't receive this callback when we're not mounted. If that's the
     // case, we should change this check into an assert that we are mounted.
-    if (!mounted)
-      return;
-    setState(() { });
+    if (!mounted) return;
+    setState(() {});
   }
 }
 
@@ -139,8 +141,7 @@ class StoreToken {
 
   @override
   bool operator ==(dynamic other) {
-    if (other.runtimeType != runtimeType)
-      return false;
+    if (other.runtimeType != runtimeType) return false;
     final StoreToken typedOther = other;
     return identical(_value, typedOther._value);
   }

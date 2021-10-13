@@ -1,12 +1,14 @@
 .atom/
 .idea/
 *.iml
+.vscode/
 
 # dart
 .packages
 .pub
 packages
 pubspec.lock
+.dart_tool/
 
 # flutter
 build/

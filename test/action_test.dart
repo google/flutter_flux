@@ -20,7 +20,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Action', () {
-    Action<String> action;
+    late Action<String> action;
 
     setUp(() {
       action = new Action<String>();
@@ -37,7 +37,7 @@ void main() {
       final Completer<Null> c = new Completer<Null>();
       final Action<String> _action = new Action<String>();
 
-      _action.listen((String payload) {
+      _action.listen((String? payload) {
         expect(payload, equals(null));
         c.complete();
       });
@@ -48,7 +48,7 @@ void main() {
 
     test('should support dispatch with a payload', () async {
       final Completer<Null> c = new Completer<Null>();
-      action.listen((String payload) {
+      action.listen((String? payload) {
         expect(payload, equals('990 guerrero'));
         c.complete();
       });
@@ -59,7 +59,7 @@ void main() {
 
     test('should dispatch by default when called', () async {
       final Completer<Null> c = new Completer<Null>();
-      action.listen((String payload) {
+      action.listen((String? payload) {
         expect(payload, equals('990 guerrero'));
         c.complete();
       });
@@ -132,7 +132,7 @@ void main() {
 
       test('should surface errors in listeners', () {
         Action<int> action = new Action<int>();
-        action.listen((int _) => throw new UnimplementedError());
+        action.listen((int? _) => throw new UnimplementedError());
         expect(action(0), throwsUnimplementedError);
       });
     });
@@ -141,7 +141,8 @@ void main() {
       test('should stop listening when subscription is canceled', () async {
         Action<Null> action = new Action<Null>();
         bool listened = false;
-        ActionSubscription subscription = action.listen((Null _) => listened = true);
+        ActionSubscription subscription =
+            action.listen((Null _) => listened = true);
 
         await action();
         expect(listened, isTrue);
@@ -185,12 +186,12 @@ void main() {
 
         stopwatch.reset();
 
-        Completer<Null> syncCompleter;
-        Completer<Null> asyncCompleter;
+        Completer<Null>? syncCompleter;
+        Completer<Null>? asyncCompleter;
         Action<Null> action = new Action<Null>();
-        action.listen((Null _) => syncCompleter.complete());
+        action.listen((Null _) => syncCompleter?.complete());
         action.listen((Null _) async {
-          asyncCompleter.complete();
+          asyncCompleter?.complete();
         });
         stopwatch.start();
         for (int i = 0; i < sampleSize; i++) {

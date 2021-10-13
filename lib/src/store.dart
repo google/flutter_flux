@@ -48,19 +48,20 @@ class Store {
   /// As an example, [transformer] could be used to throttle the number of
   /// triggers this [Store] emits for state that may update extremely frequently
   /// (like scroll position).
-  Store.withTransformer(StreamTransformer<dynamic, dynamic> transformer) {
+  Store.withTransformer(StreamTransformer<Store, dynamic> transformer) {
     _streamController = new StreamController<Store>();
 
     // apply a transform to the stream if supplied
-    _stream =
-        _streamController.stream.transform<dynamic>(transformer).asBroadcastStream();
+    _stream = _streamController.stream
+        .transform<dynamic>(transformer)
+        .asBroadcastStream() as Stream<Store>;
   }
 
   /// Stream controller for [_stream]. Used by [trigger].
-  StreamController<Store> _streamController;
+  late StreamController<Store> _streamController;
 
   /// Broadcast stream of "data updated" events. Listened to in [listen].
-  Stream<Store> _stream;
+  late Stream<Store> _stream;
 
   void dispose() {
     _streamController.close();
@@ -79,10 +80,9 @@ class Store {
   /// A convenience method for listening to an [action] and triggering
   /// automatically. The callback doesn't call return, so the return
   /// type of onAction is null.
-  void triggerOnAction<T>(Action<T> action,
-      [dynamic onAction(T payload)]) {
+  void triggerOnAction<T>(Action<T> action, [dynamic onAction(T? payload)?]) {
     if (onAction != null) {
-      action.listen((T payload) async {
+      action.listen((T? payload) async {
         await onAction(payload);
         trigger();
       });
@@ -102,7 +102,6 @@ class Store {
   /// void (null) or true.
   void triggerOnConditionalAction<T>(
       Action<T> action, FutureOr<bool> onAction(T payload)) {
-    assert(action != null);
     action.listen((dynamic payload) async {
       // Action functions must return bool, or a Future<bool>.
       dynamic result = onAction(payload);
@@ -123,8 +122,12 @@ class Store {
   /// Each time this `Store` triggers (by calling [trigger]), indicating that
   /// data has been mutated, [onData] will be called.
   StreamSubscription<Store> listen(void onData(Store event),
-      {Function onError, void onDone(), bool cancelOnError}) {
-    return _stream.listen(onData,
-        onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+      {Function? onError, void onDone()?, bool? cancelOnError}) {
+    return _stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
   }
 }

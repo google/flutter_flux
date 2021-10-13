@@ -16,7 +16,7 @@ void main() {
 
 class ChatScreen extends StatefulWidget {
   /// Creates a widget that watches stores.
-  ChatScreen({Key key}) : super(key: key);
+  ChatScreen({Key? key}) : super(key: key);
 
   @override
   ChatScreenState createState() => new ChatScreenState();
@@ -33,8 +33,8 @@ class ChatScreen extends StatefulWidget {
 class ChatScreenState extends State<ChatScreen>
     with StoreWatcherMixin<ChatScreen> {
   // Never write to these stores directly. Use Actions.
-  ChatMessageStore messageStore;
-  ChatUserStore chatUserStore;
+  late ChatMessageStore messageStore;
+  late ChatUserStore chatUserStore;
 
   final TextEditingController msgController = new TextEditingController();
 
@@ -52,23 +52,24 @@ class ChatScreenState extends State<ChatScreen>
 
     // Demonstrates using a custom change handler.
     messageStore =
-        listenToStore(messageStoreToken, handleChatMessageStoreChanged);
+        listenToStore(messageStoreToken, handleChatMessageStoreChanged)
+            as ChatMessageStore;
 
     // Demonstrates using the default handler, which just calls setState().
-    chatUserStore = listenToStore(userStoreToken);
+    chatUserStore = listenToStore(userStoreToken) as ChatUserStore;
   }
 
   void handleChatMessageStoreChanged(Store store) {
-    ChatMessageStore messageStore = store;
+    ChatMessageStore messageStore = store as ChatMessageStore;
     if (messageStore.currentMessage.isEmpty) {
-        msgController.clear();
+      msgController.clear();
     }
     setState(() {});
   }
 
   Widget _buildTextComposer(BuildContext context, ChatMessageStore messageStore,
       ChatUserStore userStore) {
-    final ValueChanged<String> commitMessage = (String _) {
+    final ValueChanged<String?> commitMessage = (String? _) {
       commitCurrentMessageAction(userStore.me);
     };
 
@@ -122,8 +123,8 @@ class ChatMessageListItem extends StatefulWidget {
 
 class ChatMessageListItemState extends State<ChatMessageListItem>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _animation;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {

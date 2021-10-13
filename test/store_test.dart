@@ -22,8 +22,8 @@ import 'package:test/test.dart';
 
 void main() {
   group('Store', () {
-    Store store;
-    Action<Null> action;
+    late Store store;
+    late Action<Null> action;
 
     setUp(() {
       store = new Store();
@@ -58,6 +58,7 @@ void main() {
       void onAction(Null _) {
         wasTriggered = true;
       }
+
       store.triggerOnAction(action, onAction);
       store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
@@ -74,6 +75,7 @@ void main() {
         wasTriggered = true;
         return true;
       }
+
       store.triggerOnConditionalAction(action, onAction);
       store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
@@ -104,6 +106,7 @@ void main() {
         await new Future<Null>.delayed(new Duration(milliseconds: 30));
         afterTimer = true;
       }
+
       store.triggerOnAction(action, asyncCallback);
       store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
@@ -117,7 +120,7 @@ void main() {
         () {
       final Action<int> _action = new Action<int>();
       int counter = 0;
-      store.triggerOnAction(_action, (int payload) => counter = payload);
+      store.triggerOnAction(_action, (int? payload) => counter = payload!);
       store.listen(expectAsync1((Store listenedStore) {
         expect(listenedStore, equals(store));
         expect(counter, equals(17));
