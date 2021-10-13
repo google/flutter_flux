@@ -4,29 +4,29 @@
 
 import 'dart:math' show Random;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show Color, Colors;
 import 'package:flutter_flux/flutter_flux.dart';
 
 class ChatUser {
-  ChatUser({this.name, this.color});
+  ChatUser({required this.name, required this.color});
   final String name;
   final Color color;
 }
 
 class ChatMessage {
-  ChatMessage({this.sender, this.text});
+  ChatMessage({required this.sender, required this.text});
   final ChatUser sender;
   final String text;
 }
 
 class ChatMessageStore extends Store {
   ChatMessageStore() {
-    triggerOnAction(setCurrentMessageAction, (String value) {
-      _currentMessage = value;
+    triggerOnAction(setCurrentMessageAction, (String? value) {
+      _currentMessage = value ?? '';
     });
-    triggerOnAction(commitCurrentMessageAction, (ChatUser me) {
+    triggerOnAction(commitCurrentMessageAction, (ChatUser? me) {
       final ChatMessage message =
-          new ChatMessage(sender: me, text: _currentMessage);
+          new ChatMessage(sender: me!, text: _currentMessage);
       _messages.add(message);
       _currentMessage = '';
     });
@@ -46,12 +46,12 @@ class ChatUserStore extends Store {
   ChatUserStore() {
     final String name = "Guest${new Random().nextInt(1000)}";
     final Color color =
-        Colors.accents[new Random().nextInt(Colors.accents.length)][700];
+        Colors.accents[new Random().nextInt(Colors.accents.length)][700]!;
     _me = new ChatUser(name: name, color: color);
     // This store does not currently handle any actions.
   }
 
-  ChatUser _me;
+  late ChatUser _me;
   ChatUser get me => _me;
 }
 

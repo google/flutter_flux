@@ -41,12 +41,12 @@ typedef void OnData<T>(T event);
 /// when a consumer needs to check state changes immediately after invoking an
 /// action.
 ///
-class Action<T> implements Function {
-  List<OnData<T>> _listeners = <OnData<T>>[];
+class Action<T> {
+  List<OnData<T?>> _listeners = <OnData<T?>>[];
 
   /// Dispatch this [Action] to all listeners. If a payload is supplied, it will
   /// be passed to each listener's callback, otherwise null will be passed.
-  Future<List<dynamic>> call([T payload]) {
+  Future<List<dynamic>> call([T? payload]) {
     // Invoke all listeners in a microtask to enable waiting on futures. The
     // microtask queue is emptied before the event loop continues. This ensures
     // synchronous listeners are invoked in the current tick of the event loop
@@ -60,7 +60,7 @@ class Action<T> implements Function {
     // for stream-based actions vs. 0.14 ms for this action implementation.
     return Future.wait<dynamic>(
       _listeners.map(
-        (OnData<T> l) => new Future<dynamic>.microtask(() => l(payload))
+        (OnData<T?> l) => new Future<dynamic>.microtask(() => l(payload)),
       ),
     );
   }
@@ -74,7 +74,7 @@ class Action<T> implements Function {
   /// dispatched. A payload of type [T] will be passed to the callback if
   /// supplied at dispatch time, otherwise null will be passed. Returns an
   /// [ActionSubscription] which provides means to cancel the subscription.
-  ActionSubscription listen(OnData<T> onData) {
+  ActionSubscription listen(OnData<T?> onData) {
     _listeners.add(onData);
     return new ActionSubscription(() => _listeners.remove(onData));
   }
@@ -84,14 +84,14 @@ typedef void _OnCancel();
 
 /// A subscription used to cancel registered listeners to an [Action].
 class ActionSubscription {
-  final _OnCancel _onCancel;
+  final _OnCancel? _onCancel;
 
   ActionSubscription(this._onCancel);
 
   /// Cancel this subscription to an [Action]
   void cancel() {
     if (_onCancel != null) {
-      _onCancel();
+      _onCancel!();
     }
   }
 }
